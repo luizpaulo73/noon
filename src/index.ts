@@ -1,0 +1,1 @@
+console.log("Hello, TypeScript 6.0.0-dev.20260416 with CommonJS and ES2020 target!");

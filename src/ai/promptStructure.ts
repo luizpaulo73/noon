@@ -20,6 +20,9 @@ RULES:
 - Rewrite vague commits into meaningful actions
 - Do not mention commit hashes
 - Prefer action verbs (e.g. "Implemented", "Fixed", "Refactored")
+- Each bullet must represent a meaningful unit of work
+- Merge similar commits into one bullet
+- If commits are unclear, infer intent from context
 
 TIME RANGE: ${input.range}
 

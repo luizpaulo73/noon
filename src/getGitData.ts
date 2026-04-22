@@ -1,26 +1,18 @@
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { getGitDataReturnType } from "./types/gitManagement";
 
+const presets: Record<string, string> = {
+    today: "1 day ago",
+    yesterday: "2 days ago",
+    week: "7 days ago"
+};
+
 export function getGitData(range: string): getGitDataReturnType {
-    let since = "1 day ago";
+    const normalizedRange = range.trim() || "today";
+    const since = presets[normalizedRange] ?? normalizedRange;
 
-    if (range === "today") {
-        since = "1 day ago";
-    }
+    const log = execFileSync("git", ["log", "--oneline", `--since=${since}`], { encoding: "utf8" }).trim();
+    const diff = execFileSync("git", ["diff", "--stat"], { encoding: "utf8" }).trim();
 
-    if (range === "yesterday") {
-        since = "2 days ago";
-    }
-
-    if (range === "week") {
-        since = "7 days ago";
-    }
-
-    const log = execSync(`git log --oneline --since="${since}"`)
-        .toString()
-        .trim();
-
-    const diff = execSync("git diff --stat").toString().trim();
-
-    return { range, log, diff }
+    return { range: normalizedRange, log, diff };
 }

@@ -30,6 +30,13 @@ With a custom range:
 npm run dev -- week
 ```
 
+You can also pass any Git-compatible date expression:
+
+```bash
+npm run dev -- "2 weeks ago"
+npm run dev -- "last friday"
+```
+
 The default range is `today`.
 
 ## Optional: Build and Run Compiled Output
@@ -51,6 +58,7 @@ npm run cli -- yesterday
 - `today` (default): last 24 hours
 - `yesterday`: last 2 days
 - `week`: last 7 days
+- Any Git date expression, such as `2 weeks ago`, `yesterday 00:00`, or `2026-04-01`
 
 ## Example Output
 

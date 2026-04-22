@@ -1,5 +1,5 @@
 import { execFileSync } from "child_process";
-import { getGitDataReturnType } from "./types/gitManagement";
+import { getGitDataInput, getGitDataReturnType } from "./types/gitManagement";
 
 const presets: Record<string, string> = {
     today: "1 day ago",
@@ -7,12 +7,28 @@ const presets: Record<string, string> = {
     week: "7 days ago"
 };
 
-export function getGitData(range: string): getGitDataReturnType {
-    const normalizedRange = range.trim() || "today";
-    const since = presets[normalizedRange] ?? normalizedRange;
+export function getGitData(input: getGitDataInput): getGitDataReturnType {
+    const normalizedRange = input.range?.trim() ?? "";
+    const normalizedSince = input.since?.trim();
+    const normalizedUntil = input.until?.trim();
 
-    const log = execFileSync("git", ["log", "--oneline", `--since=${since}`], { encoding: "utf8" }).trim();
+    const resolvedRange = normalizedRange || (normalizedSince || normalizedUntil ? "custom" : "today");
+    const resolvedSince = normalizedSince
+        ?? (normalizedRange ? (presets[normalizedRange] ?? normalizedRange) : undefined)
+        ?? (normalizedUntil ? undefined : presets.today);
+
+    const logArgs = ["log", "--oneline"];
+
+    if (resolvedSince) {
+        logArgs.push(`--since=${resolvedSince}`);
+    }
+
+    if (normalizedUntil) {
+        logArgs.push(`--until=${normalizedUntil}`);
+    }
+
+    const log = execFileSync("git", logArgs, { encoding: "utf8" }).trim();
     const diff = execFileSync("git", ["diff", "--stat"], { encoding: "utf8" }).trim();
 
-    return { range: normalizedRange, log, diff };
+    return { range: resolvedRange, since: resolvedSince, until: normalizedUntil, log, diff };
 }

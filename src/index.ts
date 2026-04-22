@@ -14,7 +14,6 @@ program
         if (options.ai) {
             const summary = await summarizeGitData({
                 log: data.log,
-                diff: data.diff,
                 range: data.range
             });
 

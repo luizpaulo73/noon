@@ -15,15 +15,14 @@ export function getGitData(input: getGitDataInput): getGitDataReturnType {
     const resolvedRange = normalizedRange || (normalizedSince || normalizedUntil ? "custom" : "today");
     const resolvedSince = normalizedSince
         ?? (normalizedRange ? (presets[normalizedRange] ?? normalizedRange) : undefined)
-        ?? (normalizedUntil ? undefined : presets.today);
+        ?? (normalizedUntil ? "7 days ago" : presets.today);
 
-    const logArgs = ["log", "--oneline"];
+    const logArgs = ["log", "--no-merges", "shortstat", "--pretty=format:%s"];
 
     if (resolvedSince) logArgs.push(`--since=${resolvedSince}`);
     if (normalizedUntil) logArgs.push(`--until=${normalizedUntil}`);
 
     const log = execFileSync("git", logArgs, { encoding: "utf8" }).trim();
-    const diff = execFileSync("git", ["diff", "--stat"], { encoding: "utf8" }).trim();
 
-    return { range: resolvedRange, since: resolvedSince, until: normalizedUntil, log, diff };
+    return { range: resolvedRange, since: resolvedSince, until: normalizedUntil, log };
 }

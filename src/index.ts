@@ -4,9 +4,15 @@ import { getGitData } from "./getGitData";
 
 program
     .argument("[range...]")
-    .action((rangeParts: string[] = ["today"]) => {
-        const range = rangeParts.join(" ");
-        const data = getGitData(range);
+    .option("--since <date>", "Start date expression (git --since)")
+    .option("--until <date>", "End date expression (git --until)")
+    .action((rangeParts: string[] = [], options: { since?: string; until?: string }) => {
+        const range = rangeParts.join(" ").trim();
+        const data = getGitData({
+            range: range || undefined,
+            since: options.since,
+            until: options.until
+        });
         console.log(JSON.stringify(data, null, 2));
     });
 

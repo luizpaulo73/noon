@@ -40,11 +40,19 @@ npm run dev -- "last friday"
 You can run with an explicit date interval:
 
 ```bash
-npm run dev -- --since "2026-04-01" --until "2026-04-15"
-npm run dev -- --since "10 days ago" --until "yesterday"
+npm run dev -- since="2026-04-01" until="2026-04-15"
+npm run dev -- since="10 days ago" until="yesterday"
 ```
 
-If you pass `--since` and/or `--until`, they are sent directly to `git log`.
+If you pass `since=...` and/or `until=...`, they are sent directly to `git log`.
+
+Direct CLI options are also supported:
+
+```bash
+npm run dev -- -- --since "10 days ago" --until "yesterday"
+```
+
+For `npm run dev`, use `since=...` / `until=...` when you want a single `--` separator.
 
 The default range is `today`.
 
